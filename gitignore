@@ -1,0 +1,19 @@
+# raw data (do not commit the full dataset)
+data/*.csv
+!data/sample/*.csv
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# environments
+.venv/
+venv/
+env/
+
+# os and editors
+.DS_Store
+.Rhistory
+.Rproj.user/
+.vscode/
