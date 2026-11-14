@@ -1,6 +1,6 @@
-# raw data (do not commit the full dataset)
-data/*.csv
-!data/sample/*.csv
+# raw and processed data are rebuilt by `make data` and `make m2`, never committed
+data/raw/
+data/processed/
 
 # python
 __pycache__/
