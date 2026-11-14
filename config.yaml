@@ -1,0 +1,91 @@
+# All paths are relative to the repository root.
+seed: 42
+null_permutations: 200        # shuffles for the Kaggle randomization tests
+paths:
+  raw: data/raw
+  processed: data/processed
+  figures: figures
+  tables: reports/tables
+sources:
+  kaggle:
+    file: Groceries_dataset.csv
+    url: https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset
+    md5: b0f5c26394ad0f9572606ff706097770
+  arules:
+    file: groceries.csv
+    url: https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/groceries.csv
+    md5: 0a3d21c692be5c8ce55c93e59543dcbe
+  cj_transactions:
+    file: transactions.rds
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/transactions.rds
+    md5: 32edf922b4d19326cc17841741d5dd4e
+  cj_products:
+    file: products.rda
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/products.rda
+    md5: 16fa100d06e14622a624451954e07123
+  cj_promotions:
+    file: promotions.rds
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/promotions.rds
+    md5: cf0c7e1a55a5b3f547c429b19ece732d
+  cj_demographics:
+    file: demographics.rda
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/demographics.rda
+    md5: a81592d0417522ef596d24e871d7c5ed
+  cj_campaigns:
+    file: campaigns.rda
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/campaigns.rda
+    md5: 020f65c8a611bea73e720c1b39987146
+  cj_campaign_descriptions:
+    file: campaign_descriptions.rda
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/campaign_descriptions.rda
+    md5: 1b96d0c75c4d102ece006423c46bb4a7
+  cj_coupons:
+    file: coupons.rda
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/coupons.rda
+    md5: 674bf8525443e9743242a128b3de696b
+  cj_coupon_redemptions:
+    file: coupon_redemptions.rda
+    url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/coupon_redemptions.rda
+    md5: 56b741943eb24896975b40f6a3ef254c
+cj:
+  # departments that are services or non-merchandise, not shopping-basket items
+  drop_departments: [FUEL, COUPON, MISCELLANEOUS, POSTAL CENTER, PROD-WHS SALES, GM MERCH EXP,
+                     AUTOMOTIVE, PHOTO & VIDEO, CNTRL/STORE SUP, TOYS, ELECT &PLUMBING,
+                     GARDEN CENTER, TRAVEL & LEISURE, RESTAURANT]
+  split_date: "2017-07-01"     # first half vs second half for RQ5
+rules:
+  min_pair_baskets: 10          # pairs seen in fewer baskets are not ranked
+  fdr: 0.05
+  staple_top_share: 0.05        # top 5% of items by prevalence count as staples
+  min_purchases_rq3: 4          # histories shorter than this are not classified
+
+# ---- Milestone 3: modeling and evaluation -------------------------------------------------
+m3:
+  periods:                      # fit on the past, tune on Q3, test once on Q4 (2017)
+    fit_start: "2017-01-01"
+    fit_end:   "2017-07-01"     # January to June: fit everything for tuning
+    tune_end:  "2017-10-01"     # July to September: tuning and C3 training queries
+    test_end:  "2018-01-02"     # October to December: final test, touched once
+  swap_samples: 30              # swap-randomized samples per period (M2 used 40 on the full year)
+  k: 10                         # length of a recommendation list
+  bootstrap: 1000               # paired household bootstrap resamples
+  staple_grid: [0.05, 0.10]     # staple cutoffs computed per window; 0.05 (M2 definition) is used
+  c1_grid:                      # association rules (FP-Growth)
+    min_support: [0.002, 0.005, 0.01]
+    min_confidence: [0.05, 0.10, 0.20]
+  c2_grid:                      # null-calibrated naive Bayes recommender
+    measure: [strength, ebgm]
+    prior_weight: [0.0, 0.5, 1.0]
+    clip: [true, false]
+  c3:                           # LightGBM LambdaMART hybrid
+    trials: 10
+    train_queries: 15000
+    candidates: 50
+  rq3:
+    min_purchases: 4
+    horizon_days: 91
+  rq4:
+    nmf_k: [6, 8, 10, 12, 15]
+  promo:
+    pairs_per_group: 150
+    stores: 112                 # every store with promotion records

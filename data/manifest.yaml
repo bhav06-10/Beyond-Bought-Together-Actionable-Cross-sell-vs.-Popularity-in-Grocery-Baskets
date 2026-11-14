@@ -1,0 +1,24 @@
+kaggle:
+  file: Groceries_dataset.csv
+  url: https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset
+  md5: b0f5c26394ad0f9572606ff706097770
+  bytes: 1103280
+  checked_on: '2026-11-13'
+arules:
+  file: groceries.csv
+  url: https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/groceries.csv
+  md5: 0a3d21c692be5c8ce55c93e59543dcbe
+  bytes: 500843
+  checked_on: '2026-11-13'
+cj_transactions:
+  file: transactions.rds
+  url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/transactions.rds
+  md5: 32edf922b4d19326cc17841741d5dd4e
+  bytes: 12775661
+  checked_on: '2026-11-13'
+cj_products:
+  file: products.rda
+  url: https://raw.githubusercontent.com/bradleyboehmke/completejourney/master/data/products.rda
+  md5: 16fa100d06e14622a624451954e07123
+  bytes: 869019
+  checked_on: '2026-11-13'

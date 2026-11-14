@@ -1,5 +1,3 @@
-[index.md](https://github.com/user-attachments/files/34835296/index.md)
-
 ---
 ---
 
