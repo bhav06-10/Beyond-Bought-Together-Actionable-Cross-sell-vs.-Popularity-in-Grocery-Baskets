@@ -1,6 +1,10 @@
-pandas
-numpy
-scipy
-mlxtend
-matplotlib
-jupyter
+# Python 3.13
+pandas==3.0.5
+numpy==2.5.3
+scipy==1.18.1
+matplotlib==3.11.2
+pyreadr==0.5.9
+PyYAML==6.0.1
+scikit-learn==1.9.1
+lightgbm==4.7.0
+mlxtend==0.25.0
