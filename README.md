@@ -1,4 +1,4 @@
-[README (1).md](https://github.com/user-attachments/files/33589297/README.1.md)
+[README.md](https://github.com/user-attachments/files/34835214/README.md)
 # Beyond Bought-Together
 
 Actionable cross-sell versus popularity in grocery baskets. A semester project for CSCI 5502 Data Mining at the University of Colorado Boulder.
@@ -61,6 +61,41 @@ make all
 
 Every headline number in the report and on the website is saved to `reports/numbers.json`. A full run takes about five minutes on a laptop. Random steps use the seed in `config.yaml`, so results repeat exactly. `make tidy` removes all generated outputs.
 
+## Milestone 3: modeling and evaluation
+
+Every model is fitted on the past and scored on the future: statistics come from January to June 2017, settings are tuned on July to September, and the final test on October to December is run once, after refitting on January to September with the settings frozen. Each task is its own script in `src/m3/`, and `make m3` runs them in order (about 40 minutes on a laptop, after `make m2`).
+
+### Which data-mining method answers which question
+
+| RQ | Question in M3 | Task type | Baseline | Candidate methods | Headline metric | Script |
+| --- | --- | --- | --- | --- | --- | --- |
+| RQ2 (primary) | Which method recommends real cross-sell in future baskets? | Ranking (basket completion) | B0 popularity; B1 household frequency | C1 FP-Growth association rules; C2 null-calibrated strength; C3 LightGBM LambdaMART hybrid | Recall@10 on targets new to the household and not staples | `step04` to `step08` |
+| RQ1 | Which pair measure predicts next-half strength? | Regression and calibration over pairs | First-half lift | M2 swap-null shrunk strength; DuMouchel's Gamma-Poisson Shrinker (EBGM) | MAE of the next-half log ratio; sign-error rate | `step09_rq1_measures.py` |
+| RQ5 | Which above-chance rules fail next quarter? | Binary classification | Every rule survives | L2 logistic regression; LightGBM classifier | PR-AUC for the failing class | `step10_rq5_reliability.py` |
+| Actionability | Do predicted complements respond when the lead item is promoted? | Observational causal check | Matched no-association control pairs | Two-way fixed-effects linear probability model per pair | Complement minus control effect | `step11_promotions.py` |
+| RQ3 | When will a household rebuy a category? | Time-to-event forecasting | Household's own median gap | Discrete-time hazard: logistic and LightGBM | Concordance index; integrated Brier score; reminders within 7 days | `step12_rq3_survival.py` |
+| RQ4 | Does trip order add anything beyond household taste? | Ranking (next trip) and clustering | Household frequency (taste) | First-order Markov chain; NMF shopping missions; taste + Markov | Recall@10 gain from adding sequence; mission stability | `step13_rq4_sequence.py` |
+
+Shared pieces: `m3lib.py` (periods, swap-randomized pair statistics, EBGM, bootstrap), `features.py` (past-only features), `harness.py` (queries and metrics), `rq2lib.py` (the five RQ2 models). Supporting steps: `step01_data.py` (companion tables), `step02_features.py`, `step03_harness.py`, `step14_errors.py` (errors, subgroups, coupons, SHAP, exemplars), `step15_external.py` (Instacart replication of RQ2 and RQ3, and figure 18 with the Carbo-Loading check from step 9), `step16_routing.py` (the routed table).
+
+### Reproduce Milestone 3
+
+```bash
+make m2      # Milestone 2 pipeline, builds data/processed
+make m3      # every Milestone 3 step; tables in reports/tables/m3_*.csv, figures 9 to 18
+```
+
+Seeds, split dates and every hyperparameter grid are in the `m3:` block of `config.yaml`. Headline numbers are written to `reports/numbers.json` under keys starting with `m3_`. The Instacart and Carbo-Loading checks need a manual download (see `data/README.md`) and skip cleanly without it.
+
+### Outside validation
+
+| Check | Data | Result |
+| --- | --- | --- |
+| RQ2 replication, cross-sell Recall@10 | Instacart, 20,000 users, 134 aisles | B0 29.0%, B1 29.0%, C1 35.1%, C2 35.3% (C2 vs B0 +5.6 to +7.1 points; C1 and C2 tied; C3 not rerun) |
+| RQ3 replication, aisle in next order | Instacart, 169,614 user-aisle histories | Regular and due 61% vs 35% for neither; timing AUC 0.70 vs 0.65 for frequency alone |
+| Direction in the cart | Instacart add-to-cart order | 394 of 1,493 above-chance pairs have a clear order (FDR 5%); read as app flow, not cause |
+| RQ1 known complements | dunnhumby Carbo-Loading | AUC lift 0.85, M2 strength 0.87, EBGM 0.87; top-20 complement share 90% / 100% / 100% |
+
 ## Repository structure
 
 ```
@@ -71,7 +106,7 @@ Makefile            one command per pipeline stage
 .gitignore          keeps data/raw/ and data/processed/ out of git
 data/               README.md (provenance and download steps), label_map.csv, manifest.yaml
 src/                pipeline code; common.py and lib.py are shared helpers
-notebooks/          exploration and staged analysis
+src/m3/             Milestone 3 modeling and evaluation, one script per step
 figures/            figures generated by make all
 reports/            milestone2_report.pdf and .docx, numbers.json, tables/
 docs/               the project website (GitHub Pages)
@@ -86,7 +121,8 @@ The full write-up covers data provenance, the data dictionary, reproducible clea
 
 - Milestone 0: project idea and framing, approved.
 - Milestone 1: framing, research questions, team, website, and repository setup.
-- Milestone 2: data acquisition, provenance audit, reproducible cleaning, quality assessment, and exploratory analysis. This is the current milestone.
+- Milestone 2: data acquisition, provenance audit, reproducible cleaning, quality assessment, and exploratory analysis.
+- Milestone 3: modeling and evaluation with time-respecting validation, baselines and candidate methods for every research question, error analysis and the routed table. This is the current milestone.
 - Later milestones: association strength and the popularity split, replenishment and sequential analysis, temporal validation, and the final routed rule set.
 
 ## Data use and privacy
