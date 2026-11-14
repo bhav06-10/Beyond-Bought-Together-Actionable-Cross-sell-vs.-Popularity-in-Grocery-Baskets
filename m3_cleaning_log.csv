@@ -1,3 +1,0 @@
-step,rows_before,rows_after,removed,reason
-"same filters as M2 clean.py (product match, service departments, voids)",1469307,1437898,31409,identical to M2 so baskets match
-"promotions: join to products, drop service departments",20940529,20916947,23582,category is the M3 item level
