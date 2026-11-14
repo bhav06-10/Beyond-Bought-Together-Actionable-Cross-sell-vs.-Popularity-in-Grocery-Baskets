@@ -1,4 +1,0 @@
-,pairs,complements,auc,top20_complement_share
-lift (baseline),1944.0,698.0,0.849854203939713,0.9
-M2 strength,1944.0,698.0,0.8660366467825982,1.0
-EBGM,1944.0,698.0,0.8678039065985366,1.0
