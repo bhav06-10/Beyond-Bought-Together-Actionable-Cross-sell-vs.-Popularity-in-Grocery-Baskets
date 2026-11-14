@@ -1,1 +1,171 @@
 
+raw_label,clean_label,department
+Instant food products,Instant food products,pantry
+UHT-milk,UHT-milk,dairy
+abrasive cleaner,abrasive cleaner,household
+artif. sweetener,artif. sweetener,pantry
+baby cosmetics,baby cosmetics,personal care
+baby food,baby food,pantry
+bags,bags,household
+baking powder,baking powder,pantry
+bathroom cleaner,bathroom cleaner,household
+beef,beef,meat & fish
+berries,berries,produce
+beverages,beverages,non-alcoholic drinks
+bottled beer,bottled beer,alcohol
+bottled water,bottled water,non-alcoholic drinks
+brandy,brandy,alcohol
+brown bread,brown bread,bakery
+butter,butter,dairy
+butter milk,butter milk,dairy
+cake bar,cake bar,bakery
+candles,candles,household
+candy,candy,snacks & sweets
+canned beer,canned beer,alcohol
+canned fish,canned fish,meat & fish
+canned fruit,canned fruit,pantry
+canned vegetables,canned vegetables,pantry
+cat food,cat food,pet
+cereals,cereals,pantry
+chewing gum,chewing gum,snacks & sweets
+chicken,chicken,meat & fish
+chocolate,chocolate,snacks & sweets
+chocolate marshmallow,chocolate marshmallow,snacks & sweets
+citrus fruit,citrus fruit,produce
+cleaner,cleaner,household
+cling film/bags,cling film/bags,household
+cocoa drinks,cocoa drinks,non-alcoholic drinks
+coffee,coffee,non-alcoholic drinks
+condensed milk,condensed milk,dairy
+cooking chocolate,cooking chocolate,pantry
+cookware,cookware,household
+cream,cream,dairy
+cream cheese,cream cheese,dairy
+curd,curd,dairy
+curd cheese,curd cheese,dairy
+decalcifier,decalcifier,household
+dental care,dental care,personal care
+dessert,dessert,dairy
+detergent,detergent,household
+dish cleaner,dish cleaner,household
+dishes,dishes,household
+dog food,dog food,pet
+domestic eggs,domestic eggs,dairy
+female sanitary products,female sanitary products,personal care
+finished products,finished products,pantry
+fish,fish,meat & fish
+flour,flour,pantry
+flower (seeds),flower (seeds),household
+flower soil/fertilizer,flower soil/fertilizer,household
+frankfurter,frankfurter,meat & fish
+frozen chicken,frozen chicken,frozen
+frozen dessert,frozen dessert,frozen
+frozen fish,frozen fish,frozen
+frozen fruits,frozen fruits,frozen
+frozen meals,frozen meals,frozen
+frozen potato products,frozen potato products,frozen
+frozen vegetables,frozen vegetables,frozen
+fruit/vegetable juice,fruit/vegetable juice,non-alcoholic drinks
+grapes,grapes,produce
+hair spray,hair spray,personal care
+ham,ham,meat & fish
+hamburger meat,hamburger meat,meat & fish
+hard cheese,hard cheese,dairy
+herbs,herbs,produce
+honey,honey,pantry
+house keeping products,house keeping products,household
+hygiene articles,hygiene articles,personal care
+ice cream,ice cream,frozen
+instant coffee,instant coffee,non-alcoholic drinks
+jam,jam,pantry
+ketchup,ketchup,pantry
+kitchen towels,kitchen towels,household
+kitchen utensil,kitchen utensil,household
+light bulbs,light bulbs,household
+liqueur,liqueur,alcohol
+liquor,liquor,alcohol
+liquor (appetizer),liquor (appetizer),alcohol
+liver loaf,liver loaf,meat & fish
+long life bakery product,long life bakery product,bakery
+make up remover,make up remover,personal care
+male cosmetics,male cosmetics,personal care
+margarine,margarine,dairy
+mayonnaise,mayonnaise,pantry
+meat,meat,meat & fish
+meat spreads,meat spreads,meat & fish
+misc. beverages,misc. beverages,non-alcoholic drinks
+mustard,mustard,pantry
+napkins,napkins,household
+newspapers,newspapers,household
+nut snack,nut snack,snacks & sweets
+nuts/prunes,nuts/prunes,produce
+oil,oil,pantry
+onions,onions,produce
+organic products,organic products,produce
+organic sausage,organic sausage,meat & fish
+other vegetables,other vegetables,produce
+packaged fruit/vegetables,packaged fruit/vegetables,produce
+pasta,pasta,pantry
+pastry,pastry,bakery
+pet care,pet care,pet
+photo/film,photo/film,household
+pickled vegetables,pickled vegetables,pantry
+pip fruit,pip fruit,produce
+popcorn,popcorn,snacks & sweets
+pork,pork,meat & fish
+pot plants,pot plants,household
+potato products,potato products,pantry
+preservation products,preservation products,pantry
+processed cheese,processed cheese,dairy
+prosecco,prosecco,alcohol
+pudding powder,pudding powder,pantry
+ready soups,ready soups,pantry
+red/blush wine,red/blush wine,alcohol
+rice,rice,pantry
+roll products,roll products,bakery
+rolls/buns,rolls/buns,bakery
+root vegetables,root vegetables,produce
+rubbing alcohol,rubbing alcohol,personal care
+rum,rum,alcohol
+salad dressing,salad dressing,pantry
+salt,salt,pantry
+salty snack,salty snack,snacks & sweets
+sauces,sauces,pantry
+sausage,sausage,meat & fish
+seasonal products,seasonal products,household
+semi-finished bread,semi-finished bread,bakery
+shopping bags,shopping bags,household
+skin care,skin care,personal care
+sliced cheese,sliced cheese,dairy
+snack products,snack products,snacks & sweets
+soap,soap,personal care
+soda,soda,non-alcoholic drinks
+soft cheese,soft cheese,dairy
+softener,softener,household
+sound storage medium,sound storage medium,household
+soups,soups,pantry
+sparkling wine,sparkling wine,alcohol
+specialty bar,specialty bar,snacks & sweets
+specialty cheese,specialty cheese,dairy
+specialty chocolate,specialty chocolate,snacks & sweets
+specialty fat,specialty fat,dairy
+specialty vegetables,specialty vegetables,produce
+spices,spices,pantry
+spread cheese,spread cheese,dairy
+sugar,sugar,pantry
+sweet spreads,sweet spreads,pantry
+syrup,syrup,pantry
+tea,tea,non-alcoholic drinks
+tidbits,tidbits,snacks & sweets
+toilet cleaner,toilet cleaner,household
+tropical fruit,tropical fruit,produce
+turkey,turkey,meat & fish
+vinegar,vinegar,pantry
+waffles,waffles,bakery
+whipped/sour cream,whipped/sour cream,dairy
+whisky,whisky,alcohol
+white bread,white bread,bakery
+white wine,white wine,alcohol
+whole milk,whole milk,dairy
+yogurt,yogurt,dairy
+zwieback,zwieback,bakery
