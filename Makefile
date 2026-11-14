@@ -24,12 +24,13 @@ m3_data:     ## steps 1-3: companion tables, past-only features, query sets
 	$(M3) step01_data.py
 	$(M3) step02_features.py
 	$(M3) step03_harness.py
-m3_rq2:      ## steps 4-8: baselines, tuning C1/C2, C3 learning-to-rank, final test, cross-check + placebo
+m3_rq2:      ## steps 4-8 and 17: baselines, tuning C1/C2, C3 learning-to-rank, final test, cross-check + placebo, rule redundancy
 	$(M3) step04_baselines.py
 	$(M3) step05_candidates.py
 	$(M3) step06_ltr.py
 	$(M3) step07_final_test.py
 	$(M3) step08_crosscheck.py
+	$(M3) step17_rule_redundancy.py
 m3_rq1:      ## step 9: which pair measure predicts next-half strength (+ Carbo-Loading if present)
 	$(M3) step09_rq1_measures.py
 m3_rq5:      ## step 10: which rules fail next quarter

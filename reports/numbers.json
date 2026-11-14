@@ -1625,5 +1625,30 @@
         }
       ]
     }
+  },
+  "m3_rq2_rule_redundancy": {
+    "rules": 143502,
+    "one_item_rules": 11344,
+    "two_item_rules": 132158,
+    "redundant_two_item": 2619,
+    "redundant_share_of_two_item": 0.019817188516775375,
+    "one_item_distinct_pairs": 6594,
+    "mirror_duplicates": 4750,
+    "obvious_staple_consequent_share": 0.3302671739766693,
+    "same_department_share": 0.3602528187760449,
+    "kept_after_pruning": 140883,
+    "min_improvement": 0.01,
+    "effect": {
+      "C1 all rules": {
+        "rules": 143502.0,
+        "recall_all_warm": 0.3354269968252032,
+        "recall_crosssell": 0.2766448394137824
+      },
+      "C1 redundant rules removed": {
+        "rules": 140883.0,
+        "recall_all_warm": 0.3354117517026896,
+        "recall_crosssell": 0.27667602120361706
+      }
+    }
   }
 }

@@ -68,14 +68,14 @@ Every model is fitted on the past and scored on the future: statistics come from
 
 | RQ | Question in M3 | Task type | Baseline | Candidate methods | Headline metric | Script |
 | --- | --- | --- | --- | --- | --- | --- |
-| RQ2 (primary) | Which method recommends real cross-sell in future baskets? | Ranking (basket completion) | B0 popularity; B1 household frequency | C1 FP-Growth association rules; C2 null-calibrated strength; C3 LightGBM LambdaMART hybrid | Recall@10 on targets new to the household and not staples | `step04` to `step08` |
+| RQ2 (primary) | Which method recommends real cross-sell in future baskets? | Ranking (basket completion) | B0 popularity; B1 household frequency | C1 FP-Growth association rules; C2 null-calibrated strength; C3 LightGBM LambdaMART hybrid | Recall@10 on targets new to the household and not staples; rule redundancy and obviousness | `step04` to `step08`, `step17` |
 | RQ1 | Which pair measure predicts next-half strength? | Regression and calibration over pairs | First-half lift | M2 swap-null shrunk strength; DuMouchel's Gamma-Poisson Shrinker (EBGM) | MAE of the next-half log ratio; sign-error rate | `step09_rq1_measures.py` |
 | RQ5 | Which above-chance rules fail next quarter? | Binary classification | Every rule survives | L2 logistic regression; LightGBM classifier | PR-AUC for the failing class | `step10_rq5_reliability.py` |
 | Actionability | Do predicted complements respond when the lead item is promoted? | Observational causal check | Matched no-association control pairs | Two-way fixed-effects linear probability model per pair | Complement minus control effect | `step11_promotions.py` |
 | RQ3 | When will a household rebuy a category? | Time-to-event forecasting | Household's own median gap | Discrete-time hazard: logistic and LightGBM | Concordance index; integrated Brier score; reminders within 7 days | `step12_rq3_survival.py` |
 | RQ4 | Does trip order add anything beyond household taste? | Ranking (next trip) and clustering | Household frequency (taste) | First-order Markov chain; NMF shopping missions; taste + Markov | Recall@10 gain from adding sequence; mission stability | `step13_rq4_sequence.py` |
 
-Shared pieces: `m3lib.py` (periods, swap-randomized pair statistics, EBGM, bootstrap), `features.py` (past-only features), `harness.py` (queries and metrics), `rq2lib.py` (the five RQ2 models). Supporting steps: `step01_data.py` (companion tables), `step02_features.py`, `step03_harness.py`, `step14_errors.py` (errors, subgroups, coupons, SHAP, exemplars), `step15_external.py` (Instacart replication of RQ2 and RQ3, and figure 18 with the Carbo-Loading check from step 9), `step16_routing.py` (the routed table).
+Shared pieces: `m3lib.py` (periods, swap-randomized pair statistics, EBGM, bootstrap), `features.py` (past-only features), `harness.py` (queries and metrics), `rq2lib.py` (the five RQ2 models). Supporting steps: `step01_data.py` (companion tables), `step02_features.py`, `step03_harness.py`, `step14_errors.py` (errors, subgroups, coupons, SHAP, exemplars), `step15_external.py` (Instacart replication of RQ2 and RQ3, and figure 18 with the Carbo-Loading check from step 9), `step16_routing.py` (the routed table), `step17_rule_redundancy.py` (support, confidence, lift, redundancy and obviousness of the C1 rules).
 
 ### Reproduce Milestone 3
 

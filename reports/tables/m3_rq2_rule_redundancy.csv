@@ -1,0 +1,12 @@
+,value
+rules,143502.0
+one_item_rules,11344.0
+two_item_rules,132158.0
+redundant_two_item,2619.0
+redundant_share_of_two_item,0.019817188516775375
+one_item_distinct_pairs,6594.0
+mirror_duplicates,4750.0
+obvious_staple_consequent_share,0.3302671739766693
+same_department_share,0.3602528187760449
+kept_after_pruning,140883.0
+min_improvement,0.01
