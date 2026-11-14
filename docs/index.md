@@ -1,3 +1,5 @@
+[index.md](https://github.com/user-attachments/files/34835296/index.md)
+
 ---
 ---
 
@@ -164,6 +166,137 @@ We never scale, normalise or impute. The only hand-made input is a reviewed labe
 pip install -r requirements.txt
 # put Groceries_dataset.csv in data/raw/ (see data/README.md)
 make all
+```
+
+## Models and Evaluation
+
+Milestone 3 turns each research question into a prediction checked on data the model never saw. Every model is fitted on January to June 2017, tuned on July to September, and tested once on October to December after a refit on January to September with its settings frozen. All code is in [`src/m3/`](https://github.com/bhav06-10/Beyond-Bought-Together-Actionable-Cross-sell-vs.-Popularity-in-Grocery-Baskets/tree/main/src/m3), one script per step, and `make m3` rebuilds every number and figure below.
+
+### Modeling plan
+
+| RQ | Question in M3 | Task type | Baseline | Candidate methods | Headline metric |
+| --- | --- | --- | --- | --- | --- |
+| RQ2 (primary) | Which method finds real cross-sell in future baskets? | Ranking (basket completion) | B0 popularity; B1 household frequency | C1 FP-Growth association rules; C2 null-calibrated naive Bayes; C3 LightGBM LambdaMART hybrid | Cross-sell Recall@10 |
+| RQ1 | Which pair measure predicts next-half strength? | Regression and calibration | First-half lift | M2 swap-null strength; EBGM (Gamma-Poisson Shrinker) | MAE; sign-error rate |
+| RQ5 | Which above-chance rules fail next quarter? | Classification | "Every rule survives" | Logistic regression; LightGBM | PR-AUC for failing rules |
+| RQ3 | When will a household rebuy a category? | Time-to-event forecasting | Household's median gap | Discrete-time hazard (logistic, LightGBM) | Concordance; Brier; reminder hit rate |
+| RQ4 | Does trip order add anything beyond taste? | Ranking and clustering | Household frequency | Markov chain; NMF shopping missions; taste + Markov | Gain from adding sequence |
+| Actionability | Do predicted complements respond to promotions? | Observational causal check | Matched control pairs | Two-way fixed-effects model per pair | Complement minus control |
+
+**Why these methods fit the data.** Our items are 295 categories in 140,757 baskets from 2,467 households, all binary presence data with strong popularity skew. Association mining and naive Bayes suit sparse co-occurrence; empirical-Bayes shrinkage suits thin pair counts; LambdaMART suits ranking with mixed signals; discrete-time hazards suit repurchase gaps cut off at the end of the panel; NMF suits non-negative basket data. Nothing here needs scaling except the logistic models, which standardize inside the pipeline.
+
+### Evaluation design
+
+- **Queries.** Every test basket with two or more categories becomes one query per category: hide it, and ask the model to rank everything else. That gives 263,004 test queries over 2,294 households.
+- **Two kinds of targets.** 87% of hidden categories are ones the household already bought (*repeat*). Only the rest are a cross-sell opportunity.
+- **The cross-sell protocol.** For the 32,070 hidden categories that are new to the household and not staples, every model may only recommend categories that are also new and not staples. Popularity then becomes the signal-free reference, so a model wins only by finding real association. We added this after the Kaggle placebo showed that scoring non-staple targets without hiding staples rewards any model that simply avoids staples.
+- **Fair comparison.** All models score the same queries. Differences come with 95% intervals from a paired household bootstrap (1,000 resamples) and Holm correction.
+- **Tuning.** Small grids for C1 and C2, 10 random-search trials with early stopping for C3, all on July to September only. One selection score for every model: the mean of overall and cross-sell Recall@10.
+
+**Features and leakage.** Features are popularity, household frequency, swap-null strength, EBGM, rule confidence, embedding similarity (SVD of positive PMI), days since the household last bought the category against its usual gap, department overlap and the category's promotion share that store-week. Each is computed from the fit window only. Demographics are used only to evaluate subgroups; coupon discounts and sales value are excluded because they are recorded with the purchase. The [feature table](https://github.com/bhav06-10/Beyond-Bought-Together-Actionable-Cross-sell-vs.-Popularity-in-Grocery-Baskets/blob/main/reports/tables/m3_features.csv) lists every feature and why it is in or out.
+
+### RQ2: which recommender finds real cross-sell?
+
+![RQ2 comparison](figures/fig09_rq2_comparison.png)
+
+| Model | Overall Recall@10 | Repeat targets | Cross-sell protocol | Mean popularity of list | Catalogue coverage |
+| --- | --- | --- | --- | --- | --- |
+| B0 popularity | 28.9% | 32.2% | 20.8% | 0.142 | 13% |
+| B1 household frequency | 38.9% | 44.8% | 20.8% | 0.103 | 82% |
+| C1 association rules | 33.5% | 37.0% | 27.7% | 0.133 | 27% |
+| C2 null-calibrated naive Bayes | 28.1% | 30.3% | 29.9% | 0.093 | 67% |
+| C3 learning-to-rank hybrid | **43.0%** | **48.6%** | **31.5%** | 0.105 | 85% |
+
+*Test quarter, October to December 2017. Every difference between models is outside its 95% household-bootstrap interval after Holm correction.*
+
+C3 is best on both jobs: it reminds better than the household's own history (+4.1 points) and finds new categories 10.7 points more often than popularity. Among the simpler models, C2 beats standard association rules on cross-sell by 2.2 points while recommending less popular categories, which is the project's claim in one number. B1 equals popularity under the cross-sell protocol, because a household's history says nothing about what it has never bought.
+
+![Cross-check and placebo](figures/fig10_crosscheck_placebo.png)
+
+*On the arules receipts (a second store, 5-fold cross-validation) both association models again beat popularity on cross-sell (30.8% and 29.8% against 28.2%). On the Kaggle file, where the audit found no real customer or basket signal, nothing beats popularity: FP-Growth finds no rules and falls back to popularity (24.1%), and C2 does worse (19.4%). That is what a leak-free harness should show.*
+
+### RQ1: which measure should rank pairs?
+
+![RQ1 measures](figures/fig11_rq1_measures.png)
+
+| Measure | MAE on next-half log ratio | Called positive but below chance next half | Top 50 still above chance |
+| --- | --- | --- | --- |
+| Lift (baseline) | 0.89 | 60% | 94% |
+| M2 strength | 0.21 | 19% | 98% |
+| EBGM | 0.21 | 17% | 90% |
+
+*21,354 Complete Journey pairs. Lift calls 94% of pairs positive, and 60% of those fall below chance in the second half. Both shrunk measures cut the error by three quarters. EBGM makes the fewest sign errors and became the measure inside C2 through tuning; M2 strength has the best top 50. arules shows the same order.*
+
+### RQ5: which rules will fail?
+
+![RQ5 reliability](figures/fig12_rq5_reliability.png)
+
+*Trained on January to March predicting April to June, tested on July to September predicting October to December. 24% of test rules fail. The logistic model reaches PR-AUC 0.61 against 0.24 for "all survive", and beats LightGBM (0.54), so we keep the simpler model. Read together (the features are correlated), rules that rest on few baskets and a small chance expectation are the fragile ones, which is exactly what thin evidence should look like. Rules mined in half the stores hold in the other half 77% of the time.*
+
+### RQ3: when will a household rebuy?
+
+![RQ3 survival](figures/fig14_rq3_survival.png)
+
+| Model | Concordance | Integrated Brier | Reminder within 7 days |
+| --- | --- | --- | --- |
+| Household median gap (baseline) | 0.48 | 0.40 | 32% |
+| Discrete-time hazard, logistic | 0.66 | 0.19 | 28% |
+| Discrete-time hazard, LightGBM | 0.66 | 0.19 | 30% |
+
+*62,374 household-category histories. The hazard models rank who will rebuy first far better than the median-gap rule, which does worse than chance because many "overdue" households have quietly stopped buying. For picking an exact reminder day, though, none beats the simple rule, so we would use the hazard model to choose who gets a reminder and the median gap to choose when. Our new consumption-rate feature (a bigger pack last time) showed no effect on time to rebuy.*
+
+### RQ4: sequence or taste?
+
+![RQ4 sequence](figures/fig15_rq4_sequence.png)
+
+*Predicting the next trip, adding the trip-to-trip Markov term to household taste changes Recall@10 by −0.3 points overall and +0.3 points on new categories. The sequence-only model is far worse (30.6% against 39.7%). This confirms M2's descriptive finding with a predictive test: cross-visit co-purchase is taste, not sequence. NMF found stable shopping missions (profile cosine above 0.97 across refits; adjusted Rand 0.66 to 0.82), such as a frozen-dessert run and a beer, wine and liquor run.*
+
+### Do predicted complements respond to promotions?
+
+![Promotions](figures/fig13_promotions.png)
+
+*Across 138 pairs and 70,239 baskets in 112 stores, promoting the lead category did not raise its predicted partner more than a matched control (difference −0.08, interval −0.23 to 0.06). Even a category's own promotion lifted its basket share by only about 3% in this panel, so the test has little power. We report this as inconclusive, not as evidence against the pairs.*
+
+### Errors, subgroups and interpretation
+
+![Errors](figures/fig16_errors.png)
+
+- **Where models fail.** Cross-sell is hardest in small baskets, where there is little context: C3 finds the new category 20.8% of the time in two-category baskets and 33.8% with ten or more. Light and heavy shoppers get similar cross-sell recall (31% to 32% for C3), so the hybrid does not need a long history to suggest something new.
+- **Misses look like seasonal and impulse items.** C3's worst misses were Christmas seasonal goods, liquor and foil trays, none of which follow from what else is in the basket.
+- **Substitutes.** Recommendations that resemble the basket but co-occur less than chance (two kinds of the same thing) make up under 1% of C2 and C3 lists.
+- **Subgroups.** Across income bands, household sizes and with or without kids, C3's cross-sell recall stays within 28.6% to 31.3%. The 801 households with demographics are a small, non-random subset, so this shows no large gap, not fairness.
+- **Coupons.** Removing the 603 coupon baskets keeps pair strength almost unchanged (Spearman 0.98; 79 of the top 100 pairs stay).
+- **What C3 relies on (SHAP).** Household frequency first, then EBGM association, days since the household last bought the category, and rule confidence. Promotion share adds little.
+
+### The routed table
+
+![Routing](figures/fig17_routing.png)
+
+*1,835 pairs earn a bundle slot (762 across departments): above chance in January to September and in the latest quarter, partner not a staple, and under 50% predicted chance of failing. 81% of them still beat chance in October to December, against 56% for the same number of top pairs by co-occurrence. 73 categories, led by cat litter, detergents and deodorants, get timed reminders instead. Every other frequent pair is left alone, mostly because it is popularity co-occurrence; only 6% of those beat chance in the held-out quarter.*
+
+### Outside validation: Instacart and Carbo-Loading
+
+![Outside validation](figures/fig18_external_validation.png)
+
+We reran the key tests on two datasets the models were never tuned on, with the same code and settings.
+
+- **RQ2 on Instacart** (20,000 seeded users, 134 aisles, each user's last order scored after fitting on their earlier orders). Under the same cross-sell protocol, popularity finds the new aisle 29.0% of the time, association rules 35.1% and C2 35.3%, with C2 using the settings tuned on Complete Journey. Both association models beat popularity by about 6 points (C2: +5.6 to +7.1, 95% user bootstrap); C1 and C2 are tied here. C3 was not rerun, because several of its features (promotions, store-week) do not exist in Instacart. Household frequency again equals popularity on new aisles, while it wins on repeats (80% against 51%). The main finding (association beats popularity on new categories) holds in a different retailer and shopping channel.
+- **RQ3 on Instacart.** Across 169,614 user-aisle histories, an aisle shows up in the next order 61% of the time when the user's cycle is regular and the aisle is due, against 35% when neither holds. A timing model beats frequency alone on held-out users (AUC 0.70 against 0.65). Timing matters for *who* to remind, as on Complete Journey. Instacart caps gaps at 30 days, so exact-day accuracy is not tested here.
+- **Direction (add-to-cart order).** Of 1,493 above-chance aisle pairs, 394 have a clear order in the cart (FDR 5%). Fresh fruit is usually added first. This reflects how people move through the app and is not a causal direction, so we do not use it for recommending.
+- **RQ1 on Carbo-Loading** (dunnhumby; pasta, pasta sauce, pancake mix and syrup brands). Known complements, pasta with sauce and pancake mix with syrup, should outrank cross-meal pairs. All three measures separate them well. The shrunk measures are slightly better (AUC 0.87 against 0.85 for lift), and all of their top 20 pairs are true complements, against 18 of 20 for lift. With strong, well-supported pairs like these, lift's weakness on thin counts barely shows; it matters most in the long tail, as RQ1 found.
+
+### What this does not prove
+
+- An offline hit is not extra sales. A shopper who would have bought the item anyway counts as a hit.
+- The promotions check is observational and underpowered, so it neither confirms nor rules out that bundles change behaviour.
+- Complete Journey households are frequent shoppers at one retailer, and categories are not products. Instacart reproduces the RQ2 and RQ3 findings at aisle level, but it is also one retailer's customers.
+- The test quarter includes the holidays, which is part of why seasonal items appear among the misses.
+
+### Reproduce
+
+```bash
+make m2   # Milestone 2 pipeline
+make m3   # Milestone 3: tables in reports/tables/m3_*.csv, figures 9 to 18
 ```
 
 ## Team
