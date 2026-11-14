@@ -1,0 +1,25 @@
+segment,model,versus,diff,lo,hi,p,p_holm
+all warm (open protocol),B1 household frequency,B0 popularity,0.10071690188620279,0.09546919035330309,0.10592071858453671,0.001,0.024
+all warm (open protocol),C1 association rules,B0 popularity,0.04682920508119933,0.044489602571539326,0.04921389408709174,0.001,0.024
+all warm (open protocol),C2 null-calibrated naive Bayes,B0 popularity,-0.007298602403393565,-0.011151803967885234,-0.0032891388284934887,0.001,0.024
+all warm (open protocol),C3 learning-to-rank hybrid,B0 popularity,0.14147473692635462,0.1370412780943244,0.14599870334342316,0.001,0.024
+all warm (open protocol),B0 popularity,B1 household frequency,-0.10071690188620279,-0.10592071858453671,-0.09546919035330309,0.001,0.024
+all warm (open protocol),C1 association rules,B1 household frequency,-0.05388769680500345,-0.05959561675857731,-0.04863801093787644,0.001,0.024
+all warm (open protocol),C2 null-calibrated naive Bayes,B1 household frequency,-0.10801550428959635,-0.11360541502447521,-0.10233443373186953,0.001,0.024
+all warm (open protocol),C3 learning-to-rank hybrid,B1 household frequency,0.04075783504015184,0.03835743306774857,0.04336409254641614,0.001,0.024
+all warm (open protocol),B0 popularity,C2 null-calibrated naive Bayes,0.007298602403393565,0.003289138828493488,0.011151803967885234,0.001,0.024
+all warm (open protocol),B1 household frequency,C2 null-calibrated naive Bayes,0.10801550428959635,0.10233443373186953,0.11360541502447521,0.001,0.024
+all warm (open protocol),C1 association rules,C2 null-calibrated naive Bayes,0.0541278074845929,0.05087501410538173,0.057446229125523274,0.001,0.024
+all warm (open protocol),C3 learning-to-rank hybrid,C2 null-calibrated naive Bayes,0.14877333932974818,0.1442981994093676,0.15315947688825515,0.001,0.024
+cross-sell protocol,B1 household frequency,B0 popularity,0.0,0.0,0.0,2.0,1.0
+cross-sell protocol,C1 association rules,B0 popularity,0.06835048331774243,0.06296980805317011,0.07361792190546197,0.001,0.024
+cross-sell protocol,C2 null-calibrated naive Bayes,B0 popularity,0.09061428125974431,0.08338726460031073,0.09728145418787779,0.001,0.024
+cross-sell protocol,C3 learning-to-rank hybrid,B0 popularity,0.10654817586529466,0.09980246855467928,0.11322691399695783,0.001,0.024
+cross-sell protocol,B0 popularity,B1 household frequency,0.0,0.0,0.0,2.0,1.0
+cross-sell protocol,C1 association rules,B1 household frequency,0.06835048331774243,0.06296980805317011,0.07361792190546197,0.001,0.024
+cross-sell protocol,C2 null-calibrated naive Bayes,B1 household frequency,0.09061428125974431,0.08338726460031073,0.09728145418787779,0.001,0.024
+cross-sell protocol,C3 learning-to-rank hybrid,B1 household frequency,0.10654817586529466,0.09980246855467928,0.11322691399695783,0.001,0.024
+cross-sell protocol,B0 popularity,C2 null-calibrated naive Bayes,-0.09061428125974431,-0.09728145418787779,-0.08338726460031073,0.001,0.024
+cross-sell protocol,B1 household frequency,C2 null-calibrated naive Bayes,-0.09061428125974431,-0.09728145418787779,-0.08338726460031073,0.001,0.024
+cross-sell protocol,C1 association rules,C2 null-calibrated naive Bayes,-0.02226379794200187,-0.0271609382584029,-0.016774212896293942,0.001,0.024
+cross-sell protocol,C3 learning-to-rank hybrid,C2 null-calibrated naive Bayes,0.015933894605550357,0.012838248297648827,0.019174131571199217,0.001,0.024
