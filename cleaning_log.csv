@@ -1,0 +1,9 @@
+source,step,rows_before,rows_after,removed,reason
+kaggle,"parse dates (DD-MM-YYYY), strip labels",38765,38765,0,nothing removed
+kaggle,collapse repeated item in same member-date,38765,38006,759,"same item twice in one basket; kept as n_lines, presence is what mining uses"
+arules,"strip labels, drop repeats within a receipt",43367,43367,0,trailing-space labels merged into their clean form
+cj,join transactions to products on product_id,1469307,1464471,4836,product_id not in products table
+cj,drop service departments,1464471,1444798,19673,"fuel, coupons, postal, etc. are not basket items"
+cj,drop lines with no product category,1444798,1444055,743,category is the item level used for mining
+cj,drop zero-quantity or zero-value lines,1444055,1437898,6157,"voids and adjustments, not purchases"
+cj,collapse products to category per basket,1437898,1056185,381713,several products of one category count once
